@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Just S1MEK</title>
+    <meta name="description" content="S1MEK - streamy, sklep z nagrodami i współprace. Wejdź i sprawdź co u mnie.">
+    <meta name="theme-color" content="#050505">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --kick-green: #53fc18;
+            --kick-green-dark: #3bc410;
+            --bg-dark: #050505;
+            --card-bg: rgba(20, 20, 20, 0.6);
+            --mx: 15%;
+            --my: 50%;
+        }
+        *{ -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background:
+                radial-gradient(circle at var(--mx) var(--my), rgba(83, 252, 24, 0.09), transparent 35%),
+                radial-gradient(circle at 85% 15%, rgba(83, 252, 24, 0.06), transparent 30%),
+                radial-gradient(circle at 10% 80%, rgba(83, 252, 24, 0.05), transparent 30%),
+                #050505;
+            transition: background 0.4s ease;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+            background-size: 54px 54px;
+            mask-image: radial-gradient(ellipse 100% 60% at 50% 30%, #000 15%, transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse 100% 60% at 50% 30%, #000 15%, transparent 85%);
+        }
+
+        .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: -2; opacity: 0.5; }
+        .orb-1 { width: 400px; height: 400px; background: rgba(83,252,24,0.18); top: -100px; left: -100px; animation: float1 20s ease-in-out infinite; }
+        .orb-2 { width: 500px; height: 500px; background: rgba(83,252,24,0.10); bottom: -200px; right: -100px; animation: float2 25s ease-in-out infinite; }
+        .orb-3 { width: 300px; height: 300px; background: rgba(83,252,24,0.12); top: 40%; right: 20%; animation: float3 18s ease-in-out infinite; }
+
+        @keyframes float1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(60px, 80px) scale(1.1); } }
+        @keyframes float2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-80px, -60px) scale(1.15); } }
+        @keyframes float3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-40px, 60px) scale(0.9); } }
+
+        .noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+            background: linear-gradient(90deg, var(--kick-green), #a3ff7a);
+            box-shadow: 0 0 15px rgba(83,252,24,0.8);
+            z-index: 999; transition: width 0.1s linear;
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+        .glow-green { box-shadow: 0 0 20px rgba(83, 252, 24, 0.3); }
+
+        /* NAVBAR */
+        nav.top {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(8, 8, 8, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        nav.top.scrolled { background: rgba(5, 5, 5, 0.9); border-bottom-color: rgba(83, 252, 24, 0.15); }
+
+        .nav-link {
+            position: relative; transition: color 0.3s ease;
+            font-weight: 600; font-size: 0.875rem; letter-spacing: 0.05em;
+        }
+        .nav-link::after {
+            content: ''; position: absolute; left: 0; right: 0; bottom: -6px;
+            height: 1.5px; background: var(--kick-green);
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 10px rgba(83,252,24,0.8);
+        }
+        .nav-link:hover { color: #fff; }
+        .nav-link:hover::after { transform: scaleX(1); }
+
+        /* ============================================================
+           HAMBURGER + DRAWER - dla wszystkich podstron
+           ============================================================ */
+        .hamburger {
+            display: none;
+            width: 44px; height: 44px;
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 120;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .hamburger:hover { border-color: rgba(83,252,24,0.5); box-shadow: 0 0 15px rgba(83,252,24,0.2); }
+        .hamburger span {
+            display: block; position: absolute;
+            left: 50%; width: 20px; height: 2px;
+            background: #fff; border-radius: 2px;
+            transform: translateX(-50%);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hamburger span:nth-child(1) { top: 14px; }
+        .hamburger span:nth-child(2) { top: 50%; transform: translate(-50%, -50%); }
+        .hamburger span:nth-child(3) { bottom: 14px; }
+        .hamburger.open span:nth-child(1) { top: 50%; transform: translate(-50%, -50%) rotate(45deg); background: var(--kick-green); box-shadow: 0 0 12px var(--kick-green); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
+        .hamburger.open span:nth-child(3) { bottom: 50%; transform: translate(-50%, 50%) rotate(-45deg); background: var(--kick-green); box-shadow: 0 0 12px var(--kick-green); }
+
+        .drawer-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 105;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+        .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .drawer {
+            position: fixed; top: 0; right: 0;
+            width: min(85vw, 340px);
+            height: 100dvh;
+            background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+            border-left: 1px solid rgba(83, 252, 24, 0.15);
+            z-index: 115;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+            padding: 24px 22px;
+            padding-top: calc(24px + env(safe-area-inset-top));
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
+            overflow-y: auto;
+            box-shadow: -20px 0 60px rgba(0,0,0,0.7);
+        }
+        .drawer.open { transform: translateX(0); }
+
+        .drawer-brand {
+            font-size: 1.75rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.03em;
+            margin-bottom: 28px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .drawer-brand .close-x {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #a3a3a3;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .drawer-brand .close-x:hover {
+            color: var(--kick-green);
+            border-color: rgba(83,252,24,0.4);
+            box-shadow: 0 0 12px rgba(83,252,24,0.3);
+        }
+
+        .drawer-nav {
+            display: flex; flex-direction: column; gap: 4px;
+            flex-grow: 1;
+        }
+        .drawer-nav a {
+            display: flex; align-items: center;
+            padding: 15px 16px;
+            color: #b5b5b5;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            border-radius: 12px;
+            border-left: 3px solid transparent;
+            transition: all 0.25s ease;
+            min-height: 52px;
+        }
+        .drawer-nav a:active,
+        .drawer-nav a:hover,
+        .drawer-nav a.active {
+            color: #fff;
+            background: rgba(83, 252, 24, 0.06);
+            border-left-color: var(--kick-green);
+            padding-left: 22px;
+            text-shadow: 0 0 10px rgba(83,252,24,0.3);
+        }
+
+        .drawer-auth {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 20px;
+        }
+
+        .btn-login-mobile {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%;
+            padding: 15px 20px;
+            min-height: 52px;
+            background: linear-gradient(135deg, var(--kick-green), var(--kick-green-dark));
+            color: #000;
+            font-weight: 800;
+            font-size: 13.5px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(83, 252, 24, 0.35);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .btn-login-mobile:hover,
+        .btn-login-mobile:active {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(83, 252, 24, 0.6);
+        }
+
+        .user-info-mobile {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px;
+            background: rgba(83,252,24,0.04);
+            border: 1px solid rgba(83,252,24,0.15);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .user-avatar-mobile {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--kick-green);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .user-name-mobile {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #fff;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-logout-mobile {
+            width: 100%;
+            padding: 12px;
+            min-height: 46px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #a3a3a3;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+        .btn-logout-mobile:hover {
+            color: #ef4444;
+            border-color: rgba(239,68,68,0.4);
+        }
+
+        /* HERO */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+        .d-1 { animation-delay: 0.1s; }
+        .d-2 { animation-delay: 0.22s; }
+        .d-3 { animation-delay: 0.34s; }
+        .d-4 { animation-delay: 0.46s; }
+        .d-5 { animation-delay: 0.58s; }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 15vw, 12rem);
+            line-height: 1;
+            padding-top: 0.15em;
+            padding-bottom: 0.08em;
+            letter-spacing: -0.045em;
+            font-weight: 900;
+            background: linear-gradient(180deg, #fff 0%, #fff 60%, rgba(255,255,255,0.5) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 60px rgba(83, 252, 24, 0.2);
+            overflow: visible;
+            display: block;
+        }
+        .hero-title span.accent {
+            color: var(--kick-green);
+            text-shadow: 0 0 30px rgba(83, 252, 24, 0.6), 0 0 60px rgba(83, 252, 24, 0.3);
+        }
+
+        .avatar-wrap { position: relative; display: inline-block; }
+        .avatar-wrap::before {
+            content: ''; position: absolute; inset: -6px; border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--kick-green), transparent, var(--kick-green));
+            animation: spin 4s linear infinite; filter: blur(2px);
+        }
+        .avatar-wrap::after {
+            content: ''; position: absolute; inset: -2px; border-radius: 50%;
+            background: #050505; z-index: 1;
+        }
+        .avatar-wrap img { position: relative; z-index: 2; border-radius: 50%; border: 2px solid #050505; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .live-badge {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 8px 18px; border-radius: 999px;
+            background: rgba(83, 252, 24, 0.08);
+            border: 1px solid rgba(83, 252, 24, 0.3);
+            color: var(--kick-green);
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            backdrop-filter: blur(8px);
+        }
+        .live-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--kick-green);
+            box-shadow: 0 0 10px var(--kick-green), 0 0 20px var(--kick-green);
+            animation: pulse-dot 1.8s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.5); }
+        }
+
+        .btn-primary-big {
+            background: linear-gradient(135deg, var(--kick-green), var(--kick-green-dark));
+            color: #000; font-weight: 800;
+            position: relative; overflow: hidden;
+            transition: all 0.35s ease;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            box-shadow: 0 0 25px rgba(83, 252, 24, 0.35);
+        }
+        .btn-primary-big:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 40px rgba(83, 252, 24, 0.6), 0 15px 30px -10px rgba(83,252,24,0.4);
+        }
+        .btn-primary-big::after {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: translateX(-100%); transition: transform 0.7s ease;
+        }
+        .btn-primary-big:hover::after { transform: translateX(100%); }
+
+        .btn-ghost-big {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.12);
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .btn-ghost-big:hover {
+            border-color: rgba(83,252,24,0.5);
+            color: var(--kick-green);
+            box-shadow: 0 0 25px rgba(83,252,24,0.2);
+            transform: translateY(-3px);
+        }
+
+        /* NAV CARDS */
+        .nav-card {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+        .nav-card::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.07), transparent);
+            transform: skewX(-25deg); transition: 0.8s;
+        }
+        .nav-card:hover::before { left: 160%; }
+        .nav-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(83, 252, 24, 0.5);
+            box-shadow: 0 30px 60px -15px rgba(83, 252, 24, 0.25), inset 0 0 0 1px rgba(83, 252, 24, 0.15);
+        }
+        .nav-card .icon-wrap { transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nav-card:hover .icon-wrap {
+            background: rgba(83, 252, 24, 0.15);
+            border-color: rgba(83, 252, 24, 0.7);
+            box-shadow: 0 0 40px rgba(83, 252, 24, 0.4);
+            transform: scale(1.1) rotate(-5deg);
+        }
+        .nav-card .arrow { transition: all 0.35s ease; }
+        .nav-card:hover .arrow { transform: translateX(8px); color: var(--kick-green); }
+        .nav-card .num {
+            position: absolute; top: 20px; right: 24px;
+            font-size: 4rem; font-weight: 900;
+            color: rgba(255,255,255,0.035);
+            letter-spacing: -0.05em; line-height: 1;
+            transition: color 0.4s ease;
+        }
+        .nav-card:hover .num { color: rgba(83,252,24,0.12); }
+
+        .partner-logo {
+            transition: all 0.35s ease;
+            display: flex; align-items: center; justify-content: center;
+            padding: 16px 22px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .partner-logo:hover {
+            transform: translateY(-4px) scale(1.04);
+            border-color: rgba(83, 252, 24, 0.35);
+            box-shadow: 0 15px 35px -10px rgba(83, 252, 24, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .reveal {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                        transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal.d-1 { transition-delay: 0.08s; }
+        .reveal.d-2 { transition-delay: 0.16s; }
+        .reveal.d-3 { transition-delay: 0.24s; }
+
+        #back-to-top {
+            position: fixed; bottom: 24px; right: 20px; z-index: 90;
+            width: 48px; height: 48px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--kick-green), var(--kick-green-dark));
+            color: #000;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            opacity: 0; transform: translateY(20px) scale(0.9);
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 25px rgba(83,252,24,0.4); border: none;
+        }
+        #back-to-top.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        #back-to-top:hover { transform: translateY(-4px) scale(1.08); box-shadow: 0 0 40px rgba(83,252,24,0.7); }
+
+        .section-eyebrow {
+            display: inline-flex; align-items: center; gap: 12px;
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--kick-green);
+        }
+        .section-eyebrow::before {
+            content: ''; display: inline-block;
+            width: 28px; height: 1px;
+            background: var(--kick-green);
+            box-shadow: 0 0 10px rgba(83,252,24,0.8);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #1c1c1c; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--kick-green); }
+        ::selection { background: var(--kick-green); color: #000; }
+        :focus-visible { outline: 2px solid var(--kick-green); outline-offset: 3px; border-radius: 6px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1024px) {
+            .orb { filter: blur(70px); opacity: 0.4; }
+        }
+
+        @media (max-width: 768px) {
+            .orb { filter: blur(60px); opacity: 0.35; }
+            .nav-links { display: none !important; }
+            .nav-auth-desktop { display: none !important; }
+            .hamburger { display: block; }
+
+            section { padding-left: 16px !important; padding-right: 16px !important; }
+            .nav-card { padding: 26px 22px !important; }
+            .nav-card .num { font-size: 3rem; top: 14px; right: 18px; }
+            .partner-logo { padding: 12px 16px; }
+
+            .live-badge { font-size: 0.6rem; padding: 7px 14px; letter-spacing: 0.1em; }
+
+            #back-to-top { bottom: 20px; right: 16px; width: 46px; height: 46px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: clamp(3rem, 16vw, 5rem) !important; }
+            .avatar-wrap img { width: 88px !important; height: 88px !important; }
+            .live-badge { font-size: 0.55rem; padding: 6px 12px; }
+            .btn-primary-big, .btn-ghost-big { font-size: 0.8rem !important; padding: 12px 20px !important; }
+            .nav-card { padding: 22px 18px !important; }
+            .nav-card h3 { font-size: 1.5rem !important; }
+            .partner-logo { padding: 10px 12px; }
+            .partner-logo img { height: 2.2rem !important; }
+            section.py-20, section.py-16 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+        }
+
+        /* ============ ZAKOŃCZONE LOSOWANIA ============ */
+
+.giveaway-card.finished {
+    opacity: 0.85;
+    border-color: rgba(255, 193, 7, 0.2);
+}
+
+.giveaway-card.finished::before {
+    display: none;
+}
+
+.giveaway-card.finished:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 193, 7, 0.4);
+    box-shadow: 0 20px 40px -10px rgba(255, 193, 7, 0.15);
+}
+
+.giveaway-badge.finished {
+    background: rgba(255, 193, 7, 0.12);
+    color: #fbbf24;
+    border-color: rgba(255, 193, 7, 0.4);
+}
+
+.giveaway-badge.finished::before {
+    background: #fbbf24;
+    box-shadow: 0 0 10px #fbbf24;
+    animation: none;
+}
+
+/* Duże pole ze zwycięzcą */
+.giveaway-winner-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 152, 0, 0.08));
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    margin-bottom: 1rem;
+    box-shadow: 
+        0 0 25px rgba(255, 193, 7, 0.15),
+        inset 0 0 20px rgba(255, 193, 7, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.giveaway-winner-box::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 193, 7, 0.15) 0%, transparent 60%);
+    animation: winnerGlow 3s ease-in-out infinite;
+}
+
+@keyframes winnerGlow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50%      { opacity: 0.6; transform: scale(1.1); }
+}
+
+.giveaway-winner-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 0 15px rgba(255, 193, 7, 0.9));
+    animation: trophyBounce 2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes trophyBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-5px) rotate(5deg); }
+}
+
+.giveaway-winner-info {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 0;
+}
+
+.giveaway-winner-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #fbbf24;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+
+.giveaway-winner-name {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+}
+
+/* Wyłączony przycisk dla zakończonych */
+.giveaway-btn.disabled {
+    background: rgba(50, 50, 50, 0.8);
+    color: #6b7280;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.giveaway-btn.disabled::after {
+    display: none;
+}
+
+
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <div id="progress-bar"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="noise"></div>
+
+    <!-- NAVBAR -->
+    <nav class="top" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex justify-between items-center">
+            <a href="index.html" class="text-2xl sm:text-3xl font-black italic tracking-tighter cursor-pointer flex-shrink-0">
+                S1MEK<span class="text-[var(--kick-green)]">.</span>
+            </a>
+
+            <div class="nav-links hidden md:flex items-center space-x-10 text-gray-400">
+                <a href="index.html" class="nav-link">STRONA GŁÓWNA</a>
+                <a href="socialmedia.html" class="nav-link">SOCIAL MEDIA</a>
+                <a href="wspolprace.html" class="nav-link">WSPÓŁPRACE</a>
+                <a href="sklep.html" class="nav-link">SKLEP</a>
+                <a href="ranking.html" class="nav-link">RANKING</a>
+                <a href="regulamin.html" class="nav-link">REGULAMIN</a>
+            </div>
+
+            <!-- Desktop auth (ukryty na mobile) -->
+            <div id="auth-container" class="nav-auth-desktop hidden md:flex items-center space-x-4">
+                <button onclick="loginWithKick()" class="group relative px-6 py-2.5 bg-[var(--kick-green)] text-black font-bold rounded-lg overflow-hidden transition-all hover:shadow-[0_0_25px_rgba(83,252,24,0.5)]">
+                    <span class="relative z-10 flex items-center gap-2 text-sm tracking-wide">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M2 2h20v20H2V2zm3 3v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2z"/></svg>
+                        Zaloguj
+                    </span>
+                </button>
+            </div>
+
+            <!-- HAMBURGER (mobile) -->
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- DRAWER -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <aside class="drawer" id="drawer" aria-hidden="true">
+        <div class="drawer-brand">
+            S1MEK<span class="text-[var(--kick-green)]">.</span>
+            <button class="close-x" onclick="closeDrawer()" aria-label="Zamknij menu">✕</button>
+        </div>
+
+        <nav class="drawer-nav">
+            <a href="index.html" class="active">STRONA GŁÓWNA</a>
+            <a href="socialmedia.html">SOCIAL MEDIA</a>
+            <a href="wspolprace.html">WSPÓŁPRACE</a>
+            <a href="sklep.html">SKLEP</a>
+            <a href="regulamin.html">REGULAMIN</a>
+        </nav>
+
+        <div class="drawer-auth" id="drawer-auth">
+            <button class="btn-login-mobile" onclick="loginWithKick()">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M2 2h20v20H2V2zm3 3v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2z"/></svg>
+                Zaloguj przez Kick
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-grow w-full">
+
+        <!-- HERO -->
+        <section class="pt-32 md:pt-44 pb-16 md:pb-28 px-4 sm:px-6 max-w-7xl mx-auto w-full">
+            <div class="text-center">
+
+                <div class="fade-up d-1 flex flex-col items-center gap-5 sm:gap-6 mb-6 sm:mb-8">
+                    <div class="avatar-wrap">
+                        <img src="avatar.webp" alt="S1MEK" class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-cover">
+                    </div>
+                    <div class="live-badge">
+                        <span class="live-dot"></span>
+                        <span id="live-status">· Stream offline · </span>
+                    </div>
+                </div>
+
+                <h1 class="fade-up d-2 hero-title mb-6 sm:mb-8">
+                    CZEŚĆ<span class="accent">.</span>
+                </h1>
+
+                <p class="fade-up d-3 text-gray-400 max-w-2xl mx-auto text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 sm:mb-12">
+                    Streamuję, gram, gadam i rozdaję nagrody. Wybierz, co Cię interesuje -
+                    <span class="text-white font-normal">wszystko jest w jednym miejscu</span>.
+                </p>
+
+                <div class="fade-up d-4 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-md mx-auto sm:max-w-none">
+                    <a href="sklep.html" class="btn-primary-big w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            Wejdź do sklepu
+                            <span>→</span>
+                        </span>
+                    </a>
+                    <a href="socialmedia.html" class="btn-ghost-big w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm text-white text-center">
+                        Śledź mnie
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- NAV CARDS -->
+        <section class="py-16 md:py-28 px-4 sm:px-6 max-w-7xl mx-auto w-full">
+            <div class="text-center mb-12 md:mb-16 reveal">
+                <span class="section-eyebrow">Wybierz sekcję</span>
+                <h2 class="text-4xl sm:text-5xl md:text-7xl font-black mt-4 tracking-tighter leading-none">
+                    GDZIE CHCESZ IŚĆ<span class="text-[var(--kick-green)]">?</span>
+                </h2>
+                <p class="text-gray-400 max-w-xl mx-auto mt-5 font-light leading-relaxed text-sm sm:text-base">
+                    Trzy główne sekcje - w każdej coś innego. Wybierz kierunek i zaczynamy.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+
+                <a href="sklep.html" class="nav-card glass-panel rounded-3xl p-6 sm:p-8 flex flex-col h-full reveal d-1">
+                    <span class="num">01</span>
+                    <div class="icon-wrap w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[var(--kick-green)]/10 border border-[var(--kick-green)]/25 flex items-center justify-center mb-5 sm:mb-6">
+                        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-[var(--kick-green)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 5.7a1 1 0 0 0 .9 1.3h12M16 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM10 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">SKLEP</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 sm:mb-8 flex-grow">
+                        Wymień punkty na nagrody - sprzęt gamingowy, koszulki i ekskluzywne losowania.
+                    </p>
+                    <div class="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+                        <span class="text-gray-500">Przejdź</span>
+                        <span class="arrow text-white text-2xl">→</span>
+                    </div>
+                </a>
+
+                <a href="wspolprace.html" class="nav-card glass-panel rounded-3xl p-6 sm:p-8 flex flex-col h-full reveal d-2">
+                    <span class="num">02</span>
+                    <div class="icon-wrap w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[var(--kick-green)]/10 border border-[var(--kick-green)]/25 flex items-center justify-center mb-5 sm:mb-6">
+                        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-[var(--kick-green)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-5.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm6 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">WSPÓŁPRACE</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 sm:mb-8 flex-grow">
+                        Zaufani partnerzy i kody rabatowe przygotowane dla mojej społeczności.
+                    </p>
+                    <div class="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+                        <span class="text-gray-500">Zobacz</span>
+                        <span class="arrow text-white text-2xl">→</span>
+                    </div>
+                </a>
+
+                <a href="socialmedia.html" class="nav-card glass-panel rounded-3xl p-6 sm:p-8 flex flex-col h-full reveal d-3">
+                    <span class="num">03</span>
+                    <div class="icon-wrap w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[var(--kick-green)]/10 border border-[var(--kick-green)]/25 flex items-center justify-center mb-5 sm:mb-6">
+                        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-[var(--kick-green)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M5 18h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">SOCIAL MEDIA</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 sm:mb-8 flex-grow">
+                        Wszystkie kanały w jednym miejscu - streamy, klipy, harmonogram i statystyki.
+                    </p>
+                    <div class="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+                        <span class="text-gray-500">Sprawdź</span>
+                        <span class="arrow text-white text-2xl">→</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- PARTNERS -->
+        <section class="py-12 md:py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full border-t border-white/5">
+            <div class="text-center mb-8 md:mb-10 reveal">
+                <span class="section-eyebrow">Zaufali nam</span>
+            </div>
+            <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
+                <div class="partner-logo">
+                    <img src="case2.webp" alt="Partner 1" class="h-10 sm:h-12 md:h-14 object-contain">
+                </div>
+                <div class="partner-logo">
+                    <img src="csgoskins.png" alt="Partner 2" class="h-10 sm:h-12 md:h-14 object-contain">
+                </div>
+            </div>
+        </section>
+
+        <!-- COMMUNITY CTA -->
+        <section class="py-16 md:py-28 px-4 sm:px-6 max-w-7xl mx-auto w-full">
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 md:p-14 relative overflow-hidden reveal"
+                 style="background:
+                    radial-gradient(circle at 20% 30%, rgba(83,252,24,0.15), transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(83,252,24,0.10), transparent 50%),
+                    rgba(20,20,20,0.7);
+                    border: 1px solid rgba(83,252,24,0.25);">
+
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-10 relative z-10">
+                    <div class="flex-grow text-center md:text-left">
+                        <span class="section-eyebrow">Dołącz do nas</span>
+                        <h2 class="text-3xl sm:text-4xl md:text-6xl font-black mt-4 mb-4 tracking-tighter leading-none">
+                            ZOSTAŃ CZĘŚCIĄ<span class="text-[var(--kick-green)]">.</span>
+                        </h2>
+                        <p class="text-gray-300 max-w-xl leading-relaxed font-light text-sm sm:text-base">
+                            Największa część zabawy dzieje się na moim Discordzie. Wbij, pogadaj z ekipą, weź udział w giveaway'ach i bądź na bieżąco z każdym streamem.
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0 w-full md:w-auto">
+                        <a href="https://discord.gg/s1mek" target="_blank" rel="noopener"
+                           class="btn-primary-big w-full md:w-auto px-8 sm:px-10 py-4 sm:py-5 rounded-xl text-sm inline-flex justify-center">
+                            <span class="relative z-10 flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.3 4.4A19 19 0 0 0 15.6 3l-.3.5a14 14 0 0 1 4.2 2.1A13.5 13.5 0 0 0 12 4.4c-2.7 0-5.3.4-7.5 1.2a14 14 0 0 1 4.2-2.1L8.4 3a19 19 0 0 0-4.7 1.4C1.4 8.2.7 11.9.9 15.5a19 19 0 0 0 5.8 2.9l1.2-1.7c-.7-.3-1.3-.6-1.9-1 .2-.1.3-.2.5-.3a13.5 13.5 0 0 0 11 0c.2.1.3.2.5.3-.6.4-1.2.7-1.9 1l1.2 1.7a19 19 0 0 0 5.8-2.9c.3-4.2-.8-7.8-3.8-11.1zM8.9 13.7a2 2 0 0 1 0-4 2 2 0 0 1 0 4zm6.2 0a2 2 0 0 1 0-4 2 2 0 0 1 0 4z"/></svg>
+                                Wbij na Discord
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 py-10 md:py-12 mt-auto relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 mb-8 md:mb-10">
+                <div class="sm:col-span-2">
+                    <div class="text-2xl sm:text-3xl font-black italic tracking-tighter mb-4">
+                        S1MEK<span class="text-[var(--kick-green)]">.</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+                        Streamuję, gram, rozmawiam z ludźmi i rozdaję nagrody.
+                        Zbudowałem społeczność wokół gier i pozytywnej energii - wbij i zobacz sam.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold tracking-widest uppercase text-white mb-4">Nawigacja</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Strona główna</a></li>
+                         <li><a href="socialmedia.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Social Media</a></li>
+                          <li><a href="wspolprace.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Współprace</a></li>
+                        <li><a href="sklep.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Sklep</a></li>
+                        <li><a href="ranking.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Ranking</a></li>
+                        <li><a href="regulamin.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Regulamin</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold tracking-widest uppercase text-white mb-4">Kontakt</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="mailto:s1mek@stormmedia.gg" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">s1mek@stormmedia.gg</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Współpraca biznesowa</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-600">© 2026 S1MEK. Wszelkie prawa zastrzeżone.</p>
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+                    <a href="https://kick.com/s1mek" class="text-gray-500 hover:text-[var(--kick-green)] transition-colors font-bold text-xs tracking-widest uppercase">Kick</a>
+                    <a href="https://www.youtube.com/@s1meeeeek" class="text-gray-500 hover:text-[var(--kick-green)] transition-colors font-bold text-xs tracking-widest uppercase">YouTube</a>
+                    <a href="https://www.tiktok.com/@s1mekcs2" class="text-gray-500 hover:text-[var(--kick-green)] transition-colors font-bold text-xs tracking-widest uppercase">TikTok</a>
+                    <a href="https://discord.com/invite/8Cdd2KqBww" class="text-gray-500 hover:text-[var(--kick-green)] transition-colors font-bold text-xs tracking-widest uppercase">Discord</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button id="back-to-top" aria-label="Wróć na górę" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+        </svg>
+    </button>
+
+    <script>
+        /* =========================================================
+           DRAWER
+           ========================================================= */
+        const hamburger = document.getElementById('hamburger');
+        const drawer = document.getElementById('drawer');
+        const drawerOverlay = document.getElementById('drawer-overlay');
+
+        function openDrawer() {
+            hamburger.classList.add('open');
+            drawer.classList.add('open');
+            drawerOverlay.classList.add('open');
+            drawer.setAttribute('aria-hidden', 'false');
+            hamburger.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDrawer() {
+            hamburger.classList.remove('open');
+            drawer.classList.remove('open');
+            drawerOverlay.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
+            hamburger.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.contains('open') ? closeDrawer() : openDrawer();
+        });
+        drawerOverlay.addEventListener('click', closeDrawer);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+        /* =========================================================
+           AUTH
+           ========================================================= */
+        function loginWithKick() { window.location.href = '/auth/kick'; }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { credentials: 'include' });
+                window.location.reload();
+            } catch (error) { console.error('Błąd wylogowania:', error); }
+        }
+
+        async function checkLoginStatus() {
+            const authContainer = document.getElementById('auth-container');
+            const drawerAuth = document.getElementById('drawer-auth');
+
+            try {
+                const response = await fetch('/api/me', { credentials: 'include' });
+                if (response.ok) {
+                    const user = await response.json();
+
+                    if (authContainer) {
+authContainer.innerHTML = `
+    <div class="flex items-center space-x-3">
+        <div class="text-right hidden sm:block">
+            <div class="text-sm font-bold text-white">${user.username}</div>
+            <div class="text-xs text-[var(--kick-green)] font-bold">${user.points.toLocaleString()} PKT</div>
+        </div>
+        <div class="relative">
+            <img src="${user.avatar}" alt="${user.username}" 
+                 class="w-10 h-10 rounded-full border-2 border-[var(--kick-green)] object-cover"
+                 onerror="this.src='https://ui-avatars.com/api/?name=${user.username}&background=53fc18&color=000'">
+            <span class="absolute -bottom-1 -right-1 bg-[var(--kick-green)] text-black text-[9px] font-black px-1.5 py-0.5 rounded-full border-2 border-[#050505]">
+                ${user.points}
+            </span>
+        </div>
+        <button onclick="logout()" 
+                class="text-xs text-gray-400 hover:text-red-500 transition">
+            Wyloguj
+        </button>
+    </div>
+`;
+                    }
+
+if (drawerAuth) {
+    drawerAuth.innerHTML = `
+        <div class="user-info-mobile">
+            <img src="${user.avatar}" alt="${user.username}"
+                class="user-avatar-mobile"
+                onerror="this.src='https://ui-avatars.com/api/?name=${user.username}&background=53fc18&color=000'">
+            <div class="flex-grow min-w-0">
+                <div class="user-name-mobile">${user.username}</div>
+                <div class="text-xs text-[var(--kick-green)] font-bold mt-0.5">
+                    ${user.points.toLocaleString()} PKT
+                </div>
+            </div>
+        </div>
+        <button onclick="logout()" class="btn-logout-mobile">Wyloguj się</button>
+    `;
+}
+                }
+            } catch (error) { console.error('Błąd sprawdzania sesji:', error); }
+        }
+
+        /* =========================================================
+           PROGRESS BAR + NAVBAR + BACK TO TOP
+           ========================================================= */
+        const progressBar = document.getElementById('progress-bar');
+        const navbar = document.getElementById('navbar');
+        const backTop = document.getElementById('back-to-top');
+
+        function onScroll() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = progress + '%';
+            navbar.classList.toggle('scrolled', scrollTop > 20);
+            backTop.classList.toggle('visible', scrollTop > 400);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        /* =========================================================
+           MOUSE SPOTLIGHT
+           ========================================================= */
+        let mouseTimer;
+        window.addEventListener('mousemove', (e) => {
+            if (mouseTimer) return;
+            mouseTimer = requestAnimationFrame(() => {
+                const x = (e.clientX / window.innerWidth) * 100;
+                const y = (e.clientY / window.innerHeight) * 100;
+                document.documentElement.style.setProperty('--mx', x + '%');
+                document.documentElement.style.setProperty('--my', y + '%');
+                mouseTimer = null;
+            });
+        });
+
+        /* =========================================================
+           SCROLL REVEAL
+           ========================================================= */
+        function setupReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            if (!reveals.length) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+            reveals.forEach(el => observer.observe(el));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+            setupReveal();
+            onScroll();
+        });
+    </script>
+</body>
+</html>

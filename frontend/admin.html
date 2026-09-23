@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | S1MEK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --kick-green: #53fc18; --bg-dark: #050505; --card-bg: rgba(20,20,20,0.7); }
+        body { background-color: var(--bg-dark); color: #fff; font-family: 'Outfit', sans-serif;
+               background-image: radial-gradient(circle at 15% 50%, rgba(83,252,24,0.05), transparent 25%),
+                                 radial-gradient(circle at 85% 30%, rgba(83,252,24,0.05), transparent 25%);
+               background-attachment: fixed; }
+        .glass { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); }
+        .btn-green { background: linear-gradient(135deg, #53fc18, #3bc410); color: #000; font-weight: 800; }
+        .btn-green:hover { box-shadow: 0 0 25px rgba(83,252,24,0.5); }
+        input, textarea { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        input:focus, textarea:focus { outline: none; border-color: var(--kick-green); }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- LOGIN -->
+<div id="login-view" class="min-h-screen flex items-center justify-center px-6">
+    <div class="glass rounded-3xl p-10 w-full max-w-md">
+        <h1 class="text-4xl font-black mb-2">Admin<span class="text-[var(--kick-green)]">.</span></h1>
+        <p class="text-gray-500 mb-8 text-sm">Panel administracyjny</p>
+
+        <form onsubmit="handleLogin(event)" class="space-y-4">
+            <div>
+                <label class="text-xs text-gray-400 font-bold uppercase">Login</label>
+                <input type="text" id="login-username" required
+                       class="w-full mt-1 px-4 py-3 rounded-xl text-white">
+            </div>
+            <div>
+                <label class="text-xs text-gray-400 font-bold uppercase">Hasło</label>
+                <input type="password" id="login-password" required
+                       class="w-full mt-1 px-4 py-3 rounded-xl text-white">
+            </div>
+            <div id="login-error" class="text-red-500 text-sm hidden"></div>
+            <button type="submit" class="btn-green w-full py-3 rounded-xl transition">
+                Zaloguj się
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard-view" class="hidden min-h-screen">
+    <nav class="glass border-b border-white/5 fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="text-2xl font-black italic">S1MEK<span class="text-[var(--kick-green)]">.</span> <span class="text-sm text-gray-500 not-italic font-normal">/ admin</span></div>
+            <div class="flex items-center gap-4">
+                <span id="admin-name" class="text-sm text-gray-400"></span>
+                <button onclick="handleLogout()" class="text-xs bg-red-500/20 text-red-400 px-4 py-2 rounded-lg hover:bg-red-500/30 transition">Wyloguj</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 pt-24 pb-20">
+        <!-- Tabs -->
+        <div class="flex gap-3 mb-8 border-b border-gray-800">
+            <button onclick="showTab('stats')" id="tab-stats" class="px-6 py-3 font-bold text-[var(--kick-green)] border-b-2 border-[var(--kick-green)]">Statystyki</button>
+            <button onclick="showTab('users')" id="tab-users" class="px-6 py-3 font-bold text-gray-500 hover:text-white">Użytkownicy</button>
+            <button onclick="showTab('giveaways')" id="tab-giveaways" class="px-6 py-3 font-bold text-gray-500 hover:text-white">Losowania</button>
+        </div>
+
+        <!-- STATS -->
+        <section id="view-stats">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div class="glass rounded-2xl p-6">
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mb-2">Użytkownicy</div>
+                    <div id="stat-users" class="text-4xl font-black">-</div>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mb-2">Suma punktów</div>
+                    <div id="stat-points" class="text-4xl font-black text-[var(--kick-green)]">-</div>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mb-2">Aktywne losowania</div>
+                    <div id="stat-active" class="text-4xl font-black">-</div>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mb-2">Zgłoszenia łącznie</div>
+                    <div id="stat-entries" class="text-4xl font-black">-</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-bold mb-4">🏆 TOP 10 użytkowników</h3>
+                    <div id="top-users" class="space-y-3"></div>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-bold mb-4">🆕 Ostatnio dołączeni</h3>
+                    <div id="recent-users" class="space-y-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USERS -->
+        <section id="view-users" class="hidden">
+            <div class="glass rounded-2xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead class="bg-black/40">
+                        <tr class="text-left text-gray-400 text-xs uppercase">
+                            <th class="px-6 py-4">Użytkownik</th>
+                            <th class="px-6 py-4">Punkty</th>
+                            <th class="px-6 py-4">Dołączył</th>
+                            <th class="px-6 py-4 text-right">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- GIVEAWAYS -->
+        <section id="view-giveaways" class="hidden">
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h3 class="text-lg font-bold mb-4">➕ Nowe losowanie</h3>
+                <form onsubmit="createGiveaway(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="g-title" placeholder="Tytuł" required class="px-4 py-3 rounded-xl text-white">
+                    <input type="number" id="g-cost" placeholder="Koszt (PKT)" required class="px-4 py-3 rounded-xl text-white">
+                    <input type="text" id="g-image" placeholder="URL obrazka (opcjonalne)" class="px-4 py-3 rounded-xl text-white">
+                    <input type="datetime-local" id="g-endDate" required class="px-4 py-3 rounded-xl text-white">
+                    <textarea id="g-description" placeholder="Opis" rows="2" class="px-4 py-3 rounded-xl text-white md:col-span-2"></textarea>
+                    <button type="submit" class="btn-green py-3 rounded-xl md:col-span-2">Utwórz losowanie</button>
+                </form>
+            </div>
+
+            <div id="giveaways-list" class="space-y-4"></div>
+        </section>
+    </main>
+</div>
+
+<script>
+// ============ LOGIN ============
+async function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+    const errEl = document.getElementById('login-error');
+
+    const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username, password })
+    });
+
+    if (res.ok) {
+        errEl.classList.add('hidden');
+        initDashboard();
+    } else {
+        const data = await res.json();
+        errEl.textContent = data.error || 'Błąd logowania';
+        errEl.classList.remove('hidden');
+    }
+}
+
+async function handleLogout() {
+    await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' });
+    location.reload();
+}
+
+async function checkAdminSession() {
+    const res = await fetch('/api/admin/me', { credentials: 'include' });
+    if (res.ok) {
+        const data = await res.json();
+        document.getElementById('admin-name').textContent = '@' + data.username;
+        initDashboard();
+    } else {
+        document.getElementById('login-view').classList.remove('hidden');
+    }
+}
+
+function initDashboard() {
+    document.getElementById('login-view').classList.add('hidden');
+    document.getElementById('dashboard-view').classList.remove('hidden');
+    loadStats();
+    loadUsers();
+    loadGiveaways();
+}
+
+// ============ TABS ============
+function showTab(name) {
+    ['stats', 'users', 'giveaways'].forEach(t => {
+        document.getElementById('view-' + t).classList.toggle('hidden', t !== name);
+        document.getElementById('tab-' + t).className = t === name
+            ? 'px-6 py-3 font-bold text-[var(--kick-green)] border-b-2 border-[var(--kick-green)]'
+            : 'px-6 py-3 font-bold text-gray-500 hover:text-white';
+    });
+}
+
+// ============ STATS ============
+async function loadStats() {
+    const res = await fetch('/api/admin/stats', { credentials: 'include' });
+    if (!res.ok) return;
+    const s = await res.json();
+
+    document.getElementById('stat-users').textContent = s.totalUsers;
+    document.getElementById('stat-points').textContent = s.totalPoints.toLocaleString();
+    document.getElementById('stat-active').textContent = s.activeGiveaways;
+    document.getElementById('stat-entries').textContent = s.totalEntries;
+
+    document.getElementById('top-users').innerHTML = s.topUsers.map((u, i) => `
+        <div class="flex justify-between items-center py-2 border-b border-gray-800/50">
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-xs w-6">#${i+1}</span>
+                <span class="font-semibold">${u.username || 'Unknown'}</span>
+            </div>
+            <span class="text-[var(--kick-green)] font-bold">${u.points.toLocaleString()} PKT</span>
+        </div>
+    `).join('');
+
+    document.getElementById('recent-users').innerHTML = s.recentUsers.map(u => `
+        <div class="flex justify-between items-center py-2 border-b border-gray-800/50">
+            <span class="font-semibold">${u.username || 'Unknown'}</span>
+            <span class="text-gray-500 text-xs">${new Date(u.createdAt).toLocaleDateString('pl-PL')}</span>
+        </div>
+    `).join('');
+}
+
+// ============ USERS ============
+async function loadUsers() {
+    const res = await fetch('/api/admin/users', { credentials: 'include' });
+    if (!res.ok) return;
+    const users = await res.json();
+
+    document.getElementById('users-table').innerHTML = users.map(u => `
+        <tr class="border-b border-gray-800/50 hover:bg-white/5">
+            <td class="px-6 py-4 font-semibold">${u.username || 'Unknown'}</td>
+            <td class="px-6 py-4 text-[var(--kick-green)] font-bold">${u.points.toLocaleString()}</td>
+            <td class="px-6 py-4 text-gray-500 text-xs">${new Date(u.createdAt).toLocaleString('pl-PL')}</td>
+            <td class="px-6 py-4 text-right space-x-2">
+                <button onclick="addPoints('${u._id}')" class="text-xs bg-green-500/20 text-green-400 px-3 py-1.5 rounded hover:bg-green-500/30">+ Dodaj</button>
+                <button onclick="setPoints('${u._id}')" class="text-xs bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded hover:bg-blue-500/30">Ustaw</button>
+                <button onclick="deleteUser('${u._id}', '${u.username}')" class="text-xs bg-red-500/20 text-red-400 px-3 py-1.5 rounded hover:bg-red-500/30">Usuń</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function addPoints(userId) {
+    const amount = prompt('Ile punktów dodać? (możesz wpisać liczbę ujemną, aby odjąć)');
+    if (!amount) return;
+    const res = await fetch(`/api/admin/users/${userId}/points`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ amount: Number(amount), action: 'add' })
+    });
+    if (res.ok) { loadUsers(); loadStats(); }
+}
+
+async function setPoints(userId) {
+    const amount = prompt('Ustaw nową wartość punktów:');
+    if (amount === null) return;
+    const res = await fetch(`/api/admin/users/${userId}/points`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ amount: Number(amount), action: 'set' })
+    });
+    if (res.ok) { loadUsers(); loadStats(); }
+}
+
+async function deleteUser(userId, username) {
+    if (!confirm(`Na pewno usunąć użytkownika "${username}"?`)) return;
+    await fetch(`/api/admin/users/${userId}`, { method: 'DELETE', credentials: 'include' });
+    loadUsers(); loadStats();
+}
+
+// ============ GIVEAWAYS ============
+async function loadGiveaways() {
+    const res = await fetch('/api/admin/giveaways', { credentials: 'include' });
+    if (!res.ok) return;
+    const giveaways = await res.json();
+
+    document.getElementById('giveaways-list').innerHTML = giveaways.map(g => `
+        <div class="glass rounded-2xl p-6">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h4 class="text-xl font-bold">${g.title}</h4>
+                    <p class="text-gray-400 text-sm">${g.description || ''}</p>
+                </div>
+                <span class="text-xs px-3 py-1 rounded-full ${g.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}">
+                    ${g.status === 'active' ? 'AKTYWNE' : 'ZAKOŃCZONE'}
+                </span>
+            </div>
+            <div class="grid grid-cols-3 gap-4 text-sm mb-4">
+                <div><span class="text-gray-500">Koszt:</span> <b class="text-[var(--kick-green)]">${g.cost} PKT</b></div>
+                <div><span class="text-gray-500">Uczestnicy:</span> <b>${g.entries.length}</b></div>
+                <div><span class="text-gray-500">Koniec:</span> <b>${new Date(g.endDate).toLocaleString('pl-PL')}</b></div>
+            </div>
+            ${g.winnerUsername ? `<div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-4 text-sm">
+                🏆 <b>Zwycięzca:</b> ${g.winnerUsername}
+            </div>` : ''}
+            <div class="flex gap-2">
+                ${g.status === 'active' ? `
+                    <button onclick="drawWinner('${g._id}')" class="btn-green px-4 py-2 rounded-lg text-sm">🎲 Losuj zwycięzcę</button>
+                ` : ''}
+                <button onclick="deleteGiveaway('${g._id}')" class="bg-red-500/20 text-red-400 px-4 py-2 rounded-lg text-sm hover:bg-red-500/30">Usuń</button>
+            </div>
+            ${g.entries.length > 0 ? `
+                <details class="mt-4">
+                    <summary class="text-xs text-gray-500 cursor-pointer">Pokaż uczestników (${g.entries.length})</summary>
+                    <div class="mt-2 space-y-1 text-xs">
+                        ${g.entries.map(e => `<div class="text-gray-400">${e.username} - ${new Date(e.createdAt).toLocaleString('pl-PL')}</div>`).join('')}
+                    </div>
+                </details>
+            ` : ''}
+        </div>
+    `).join('') || '<div class="text-gray-500 text-center py-10">Brak losowań. Utwórz pierwsze!</div>';
+}
+
+async function createGiveaway(e) {
+    e.preventDefault();
+    const body = {
+        title: document.getElementById('g-title').value,
+        cost: document.getElementById('g-cost').value,
+        image: document.getElementById('g-image').value,
+        endDate: document.getElementById('g-endDate').value,
+        description: document.getElementById('g-description').value
+    };
+    const res = await fetch('/api/admin/giveaways', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(body)
+    });
+    if (res.ok) {
+        e.target.reset();
+        loadGiveaways();
+        loadStats();
+    }
+}
+
+async function drawWinner(id) {
+    if (!confirm('Losować zwycięzcę? Ta operacja jest nieodwracalna.')) return;
+    const res = await fetch(`/api/admin/giveaways/${id}/draw`, { method: 'POST', credentials: 'include' });
+    const data = await res.json();
+    if (res.ok) {
+        alert(`🎉 Zwycięzca: ${data.winner}\nLiczba uczestników: ${data.totalEntries}`);
+        loadGiveaways();
+        loadStats();
+    } else {
+        alert('Błąd: ' + data.error);
+    }
+}
+
+async function deleteGiveaway(id) {
+    if (!confirm('Usunąć to losowanie i wszystkie jego zgłoszenia?')) return;
+    await fetch(`/api/admin/giveaways/${id}`, { method: 'DELETE', credentials: 'include' });
+    loadGiveaways();
+    loadStats();
+}
+
+// Start
+checkAdminSession();
+</script>
+</body>
+</html>

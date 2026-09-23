@@ -1,0 +1,30 @@
+{
+  "name": "kick-shop-backend",
+  "version": "1.0.0",
+  "description": "Backend dla sklepu z nagrodami za punkty Kick",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "@sparticuz/chromium": "^153.0.0",
+    "axios": "^1.20.0",
+    "bcrypt": "^6.0.0",
+    "cheerio": "^1.2.0",
+    "connect-mongo": "^4.6.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.0",
+    "express-session": "^1.19.0",
+    "kient": "^2.3.0",
+    "mongoose": "^8.24.4",
+    "puppeteer-core": "^25.11.0"
+  },
+  "author": "Twoje Imię",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "puppeteer": "^25.11.0"
+  }
+}
