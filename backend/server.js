@@ -28,23 +28,43 @@ if (!IS_VERCEL) {
 }
 
 // --- SESJA (z MongoDB store — działa na Vercel) ---
-app.use(session({
+// Sprawdź czy MONGODB_URI jest dostępne
+if (!process.env.MONGODB_URI) {
+    console.error('❌ BRAK MONGODB_URI w zmiennych środowiskowych!');
+}
+
+// Sesja z bezpiecznym store'em
+const sessionConfig = {
     secret: process.env.SESSION_SECRET || 'fallback-secret-change-me',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        collectionName: 'sessions',
-        ttl: 24 * 60 * 60, // 24h
-        autoRemove: 'native'
-    }),
     cookie: {
-        secure: IS_VERCEL,      // true na Vercel, false lokalnie
+        secure: IS_VERCEL,
         httpOnly: true,
         sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000
     }
-}));
+};
+
+// Użyj MongoStore tylko jeśli MONGODB_URI istnieje
+if (process.env.MONGODB_URI) {
+    try {
+        sessionConfig.store = MongoStore.create({
+            mongoUrl: process.env.MONGODB_URI,
+            collectionName: 'sessions',
+            ttl: 24 * 60 * 60,
+            autoRemove: 'native'
+        });
+        console.log('✅ Sesje: MongoDB store skonfigurowany');
+    } catch (err) {
+        console.error('❌ Błąd konfiguracji MongoStore:', err.message);
+        console.warn('⚠️ Fallback do MemoryStore (sesje będą ulotne)');
+    }
+} else {
+    console.warn('⚠️ Brak MONGODB_URI – używam MemoryStore');
+}
+
+app.use(session(sessionConfig));
 
 // --- POŁĄCZENIE Z BAZĄ ---
 mongoose.connect(process.env.MONGODB_URI)
@@ -684,5 +704,26 @@ if (!IS_VERCEL) {
         console.log(`🔗 http://localhost:${PORT}`);
     });
 }
+
+app.get('/api/diag', (req, res) => {
+    res.json({
+        nodeVersion: process.version,
+        isVercel: !!process.env.VERCEL,
+        env: {
+            hasMongoUri: !!process.env.MONGODB_URI,
+            mongoUriLength: (process.env.MONGODB_URI || '').length,
+            mongoUriStart: (process.env.MONGODB_URI || '').substring(0, 20) + '...',
+            hasSessionSecret: !!process.env.SESSION_SECRET,
+            hasKickClientId: !!process.env.KICK_CLIENT_ID,
+            hasKickClientSecret: !!process.env.KICK_CLIENT_SECRET,
+            hasKickRedirectUri: !!process.env.KICK_REDIRECT_URI,
+            hasBotrixChannel: !!process.env.BOTRIX_CHANNEL_NAME,
+            hasAdminUsername: !!process.env.ADMIN_USERNAME,
+            hasAdminPassword: !!process.env.ADMIN_PASSWORD,
+            kickRedirectUri: process.env.KICK_REDIRECT_URI
+        },
+        mongoState: mongoose.connection.readyState
+    });
+});
 
 module.exports = app;
