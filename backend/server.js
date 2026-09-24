@@ -41,7 +41,7 @@ const sessionConfig = {
     cookie: {
         secure: IS_VERCEL,
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: IS_VERCEL ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000
     }
 };
