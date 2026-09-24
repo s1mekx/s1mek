@@ -105,6 +105,11 @@ const GiveawayEntry = mongoose.model('GiveawayEntry', new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 }));
 
+const LeaderboardCache = mongoose.model('LeaderboardCache', new mongoose.Schema({
+    data: Array,
+    updatedAt: { type: Date, default: Date.now }
+}));
+
 // --- BOTRIX CACHE ---
 let botrixCache = {
     data: null,
@@ -647,15 +652,21 @@ app.post('/api/admin/giveaways/:id/draw', requireAdmin, async (req, res) => {
 
 // ==================== BOTRIX: LEADERBOARD ====================
 
+// Zwraca ranking z cache (bez scrapowania) - szybko!
 app.get('/api/botrix-leaderboard', async (req, res) => {
     try {
-        const leaderboard = await getBotrixLeaderboard();
-        res.json(leaderboard);
+        const cached = await LeaderboardCache.findOne().sort({ updatedAt: -1 });
+        if (cached && cached.data && cached.data.length > 0) {
+            return res.json(cached.data);
+        }
+        res.json([]);
     } catch (error) {
         console.error('❌ Błąd /api/botrix-leaderboard:', error.message);
-        res.status(500).json({ error: 'Nie udało się pobrać rankingu z Botrixa.' });
+        res.status(500).json({ error: 'Błąd serwera' });
     }
 });
+
+// ==================== BOTRIX: RĘCZNA SYNCHRONIZACJA ====================
 
 // ==================== BOTRIX: RĘCZNA SYNCHRONIZACJA ====================
 
@@ -664,32 +675,35 @@ app.get('/api/sync-botrix', async (req, res) => {
         botrixCache.timestamp = 0;
         const leaderboard = await getBotrixLeaderboard();
 
-        let updated = 0;
-        let notFound = 0;
+        if (!leaderboard || leaderboard.length === 0) {
+            return res.status(500).json({ error: 'Nie udało się pobrać rankingu' });
+        }
 
+        // Zapisz do bazy (zastąp stary wpis)
+        await LeaderboardCache.deleteMany({});
+        await new LeaderboardCache({ data: leaderboard, updatedAt: new Date() }).save();
+
+        // Zaktualizuj punkty użytkowników w bazie
+        let updated = 0;
         for (const entry of leaderboard) {
             const user = await User.findOne({
                 username: { $regex: new RegExp(`^${entry.username}$`, 'i') }
             });
-            if (user) {
-                if (user.points !== entry.points) {
-                    user.points = entry.points;
-                    await user.save();
-                    updated++;
-                }
-            } else {
-                notFound++;
+            if (user && user.points !== entry.points) {
+                user.points = entry.points;
+                await user.save();
+                updated++;
             }
         }
 
         res.json({
             success: true,
-            totalInBotrix: leaderboard.length,
+            saved: leaderboard.length,
             updated,
-            notFound,
-            message: `Zaktualizowano ${updated} użytkowników.`
+            message: `Zapisano ${leaderboard.length} pozycji, zaktualizowano ${updated} użytkowników.`
         });
     } catch (error) {
+        console.error('❌ Błąd sync:', error);
         res.status(500).json({ error: error.message });
     }
 });
