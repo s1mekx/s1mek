@@ -236,21 +236,33 @@ async function getBotrixLeaderboard() {
     }
 }
 
-// --- FUNKCJA: Znajdź punkty użytkownika w Botrixie ---
+// --- FUNKCJA: Znajdź punkty użytkownika w cache leaderboardu (MongoDB) ---
 async function getBotrixPointsForUser(kickUsername) {
-    const leaderboard = await getBotrixLeaderboard();
-    if (!leaderboard.length) return null;
+    try {
+        // Czytaj z MongoDB (cache zapisany przez /api/sync-botrix)
+        const cached = await LeaderboardCache.findOne().sort({ updatedAt: -1 });
 
-    const normalized = kickUsername.trim().toLowerCase();
-    const entry = leaderboard.find(u => u.username.trim().toLowerCase() === normalized);
+        if (!cached || !cached.data || cached.data.length === 0) {
+            console.log('⚠️ Brak cache leaderboardu w MongoDB');
+            return null;
+        }
 
-    if (entry) {
-        console.log(`🎯 Dopasowano w Botrix: ${entry.username} → ${entry.points} PKT`);
-        return entry.points;
+        const normalized = kickUsername.trim().toLowerCase();
+        const entry = cached.data.find(u =>
+            u.username && u.username.trim().toLowerCase() === normalized
+        );
+
+        if (entry) {
+            console.log(`🎯 Dopasowano w cache: ${entry.username} → ${entry.points} PKT`);
+            return entry.points;
+        }
+
+        console.log(`⚠️ Nie znaleziono "${kickUsername}" w cache leaderboardu`);
+        return null;
+    } catch (err) {
+        console.error('❌ Błąd czytania cache:', err.message);
+        return null;
     }
-
-    console.log(`⚠️ Nie znaleziono użytkownika "${kickUsername}" w leaderboardzie Botrix`);
-    return null;
 }
 
 // --- TWORZENIE ADMINA PRZY STARCIE ---
