@@ -151,7 +151,7 @@ async function getBotrixLeaderboard() {
         return botrixCache.data || [];
     }
 
-    const MAX_ENTRIES = 50;
+    const MAX_ENTRIES = 100;
     const MAX_PAGES = 10;
 
     let browser;
