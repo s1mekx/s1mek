@@ -39,35 +39,6 @@
         }
         .glow-green { box-shadow: 0 0 20px rgba(83, 252, 24, 0.3); }
 
-        .product-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
-            transform: skewX(-25deg);
-            transition: 0.5s;
-        }
-        .product-card:hover::before { left: 150%; }
-        .product-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(83, 252, 24, 0.4);
-            box-shadow: 0 20px 40px -10px rgba(83, 252, 24, 0.15);
-        }
-
-        .img-container {
-            background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 70%);
-        }
-        .timer-box {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(83, 252, 24, 0.2);
-            box-shadow: inset 0 0 10px rgba(83, 252, 24, 0.05);
-        }
         .btn-premium {
             background: linear-gradient(135deg, var(--kick-green), var(--kick-green-dark));
             color: #000;
@@ -95,6 +66,165 @@
         .btn-premium:hover::after {
             opacity: 1;
             transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        /* ============================================================
+           HERO BANNER
+           ============================================================ */
+        .shop-banner {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(83, 252, 24, 0.18), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(83, 252, 24, 0.12), transparent 50%),
+                linear-gradient(160deg, rgba(25, 25, 25, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%);
+            border: 1px solid rgba(83, 252, 24, 0.25);
+            border-radius: 2rem;
+            box-shadow:
+                0 30px 80px -20px rgba(83, 252, 24, 0.15),
+                inset 0 0 60px rgba(83, 252, 24, 0.05);
+        }
+        .shop-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
+            transform: skewX(-25deg);
+            animation: bannerShine 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes bannerShine {
+            0%   { left: -100%; }
+            50%  { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        .shop-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(83,252,24,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(83,252,24,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 20%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 20%, transparent 75%);
+            pointer-events: none;
+            border-radius: 2rem;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .banner-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1.5rem;
+            background: rgba(83, 252, 24, 0.08);
+            border: 1px solid rgba(83, 252, 24, 0.35);
+            box-shadow:
+                0 0 40px rgba(83, 252, 24, 0.25),
+                inset 0 0 20px rgba(83, 252, 24, 0.05);
+            animation: iconFloat 4s ease-in-out infinite;
+        }
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50%      { transform: translateY(-6px) rotate(-3deg); }
+        }
+
+        .banner-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            background: linear-gradient(180deg, #fff 0%, #fff 60%, rgba(255,255,255,0.6) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 60px rgba(83, 252, 24, 0.25);
+        }
+
+        .banner-title .accent {
+            background: linear-gradient(135deg, #53fc18, #3bc410);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(83, 252, 24, 0.6);
+        }
+
+        .banner-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            background: rgba(83, 252, 24, 0.08);
+            border: 1px solid rgba(83, 252, 24, 0.35);
+            color: var(--kick-green);
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            backdrop-filter: blur(8px);
+            margin-bottom: 1.25rem;
+        }
+
+        .banner-tag::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--kick-green);
+            box-shadow: 0 0 10px var(--kick-green);
+            animation: badgePulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%      { opacity: 0.4; transform: scale(1.4); }
+        }
+
+        .btn-shop-big {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.1rem 2.25rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, var(--kick-green), var(--kick-green-dark));
+            color: #000;
+            font-weight: 900;
+            font-size: 0.95rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 30px rgba(83, 252, 24, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shop-big:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 0 50px rgba(83, 252, 24, 0.7), 0 15px 30px -10px rgba(83,252,24,0.5);
+        }
+        .btn-shop-big::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.7s;
+        }
+        .btn-shop-big:hover::after { left: 100%; }
+
+        .btn-shop-big .arrow {
+            transition: transform 0.3s ease;
+        }
+        .btn-shop-big:hover .arrow {
+            transform: translateX(4px);
         }
 
         /* ============================================================
@@ -298,496 +428,384 @@
             }
         }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
         @media (max-width: 768px) {
             .nav-links { display: none !important; }
             .nav-auth-desktop { display: none !important; }
             .hamburger { display: block; }
-
-            .product-card .timer-box .text-3xl { font-size: 1.5rem; }
-            .product-card { border-radius: 22px; }
-            .product-card > div { padding: 18px; }
-            .img-container { height: 220px !important; margin-bottom: 16px !important; }
-            .img-container img { height: 170px !important; }
-        }
-
-        @media (max-width: 480px) {
-            .product-card > div { padding: 16px; }
-            .product-card h3 { font-size: 1.05rem !important; }
-            .product-card p { font-size: 0.8rem !important; }
-            .timer-box { padding: 12px !important; }
-            .timer-box .text-3xl { font-size: 1.25rem !important; }
-            .timer-box .text-\[10px\] { font-size: 8.5px !important; letter-spacing: 0.5px !important; }
-            .img-container { height: 180px !important; }
-            .img-container img { height: 140px !important; }
+            .banner-icon { width: 4rem; height: 4rem; }
+            .banner-icon svg { width: 2rem; height: 2rem; }
         }
 
         /* ============ SEKCJA LOSOWAŃ ============ */
+        .giveaways-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 2rem;
+            gap: 0.75rem;
+        }
+        .giveaways-title {
+            font-size: 2.25rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 0;
+        }
+        .giveaways-title .icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 12px rgba(83, 252, 24, 0.6));
+            animation: iconPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50%      { transform: scale(1.1) rotate(-8deg); }
+        }
+        .giveaways-subtitle {
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+        }
 
-/* Nagłówek sekcji */
-.giveaways-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-bottom: 2rem;
-    gap: 0.75rem;
-}
+        .giveaways-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 1.75rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .giveaways-grid > .giveaway-card,
+        .giveaways-grid > .giveaway-skeleton {
+            flex: 1 1 320px;
+            max-width: 380px;
+            min-width: 0;
+        }
+        .giveaways-grid > .giveaways-empty {
+            flex: 1 1 100%;
+            width: 100%;
+            max-width: 640px;
+            min-width: 0;
+        }
 
-.giveaways-title {
-    font-size: 2.25rem;
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin: 0;
-}
+        .giveaway-card {
+            position: relative;
+            background: linear-gradient(160deg, rgba(25, 25, 25, 0.85) 0%, rgba(10, 10, 10, 0.95) 100%);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .giveaway-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(83, 252, 24, 0.08), transparent);
+            transform: skewX(-25deg);
+            transition: 0.6s;
+            pointer-events: none;
+        }
+        .giveaway-card:hover::before { left: 150%; }
+        .giveaway-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(83, 252, 24, 0.35);
+            box-shadow:
+                0 20px 40px -10px rgba(83, 252, 24, 0.2),
+                0 0 0 1px rgba(83, 252, 24, 0.1) inset;
+        }
 
-.giveaways-title .icon {
-    font-size: 2rem;
-    filter: drop-shadow(0 0 12px rgba(83, 252, 24, 0.6));
-    animation: iconPulse 2.5s ease-in-out infinite;
-}
+        .giveaway-badge {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.85rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            background: rgba(83, 252, 24, 0.12);
+            color: #53fc18;
+            border: 1px solid rgba(83, 252, 24, 0.4);
+            backdrop-filter: blur(8px);
+        }
+        .giveaway-badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #53fc18;
+            box-shadow: 0 0 10px #53fc18;
+            animation: badgePulse 1.6s ease-in-out infinite;
+        }
 
-@keyframes iconPulse {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50%      { transform: scale(1.1) rotate(-8deg); }
-}
+        .giveaway-image-wrap {
+            position: relative;
+            height: 180px;
+            border-radius: 1rem;
+            background: radial-gradient(circle at center, rgba(83, 252, 24, 0.05) 0%, transparent 70%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            overflow: hidden;
+        }
+        .giveaway-image {
+            max-height: 160px;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
+            transition: transform 0.5s ease;
+        }
+        .giveaway-card:hover .giveaway-image { transform: scale(1.06) rotate(-2deg); }
 
-.giveaways-subtitle {
-    font-size: 0.8rem;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    font-weight: 600;
-}
+        .giveaway-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        .giveaway-description {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            line-height: 1.55;
+            margin-bottom: 1.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
-/* Siatka losowań – wyśrodkowana, elastyczna */
-/* Siatka losowań – max 3 w rzędzie, wyśrodkowana */
-.giveaways-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
-    gap: 1.75rem;
-    max-width: 1200px;      /* 3 × 380px + 2 × 28px = 1196px */
-    margin: 0 auto;
-    width: 100%;
-}
+        .giveaway-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .giveaway-stat { text-align: center; }
+        .giveaway-stat-label {
+            font-size: 0.62rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+        .giveaway-stat-value {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .giveaway-stat-value.green {
+            color: #53fc18;
+            text-shadow: 0 0 12px rgba(83, 252, 24, 0.5);
+        }
 
-.giveaways-grid > .giveaway-card,
-.giveaways-grid > .giveaway-skeleton {
-    flex: 1 1 320px;
-    max-width: 380px;
-    min-width: 0;
-}
+        .giveaway-progress {
+            height: 6px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .giveaway-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3bc410, #53fc18);
+            border-radius: 999px;
+            box-shadow: 0 0 12px rgba(83, 252, 24, 0.6);
+            transition: width 0.6s ease;
+            position: relative;
+        }
+        .giveaway-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 30px; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5));
+            animation: progressShine 2s ease-in-out infinite;
+        }
+        @keyframes progressShine {
+            0%, 100% { opacity: 0.3; }
+            50%      { opacity: 1; }
+        }
 
-.giveaways-grid > .giveaways-empty {
-    flex: 1 1 100%;
-    width: 100%;
-    max-width: 640px;
-    min-width: 0;
-}
+        .giveaway-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 1rem;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: linear-gradient(135deg, #53fc18, #3bc410);
+            color: #000;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .giveaway-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(83, 252, 24, 0.55);
+        }
+        .giveaway-btn:active { transform: scale(0.98); }
+        .giveaway-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(45deg) translate(-100%, -100%);
+            transition: transform 0.6s ease;
+        }
+        .giveaway-btn:hover::after { transform: rotate(45deg) translate(50%, 50%); }
 
-/* Karta losowania */
-.giveaway-card {
-    position: relative;
-    background: linear-gradient(160deg, rgba(25, 25, 25, 0.85) 0%, rgba(10, 10, 10, 0.95) 100%);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
+        .giveaway-winner {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: 0.85rem;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.12), rgba(255, 152, 0, 0.08));
+            border: 1px solid rgba(255, 193, 7, 0.35);
+            color: #fbbf24;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 20px rgba(255, 193, 7, 0.15) inset;
+        }
+        .giveaway-winner .trophy {
+            font-size: 1.25rem;
+            filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.8));
+        }
 
-/* Efekt błysku na karcie */
-.giveaway-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, rgba(83, 252, 24, 0.08), transparent);
-    transform: skewX(-25deg);
-    transition: 0.6s;
-    pointer-events: none;
-}
+        .giveaways-empty {
+            flex: 1 1 100%;
+            width: 100%;
+            max-width: 640px;
+            text-align: center;
+            padding: 4rem 1rem;
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            color: #6b7280;
+        }
+        .giveaways-empty .empty-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0.4;
+        }
+        .giveaways-empty .empty-text {
+            font-size: 1rem;
+            font-weight: 600;
+        }
 
-.giveaway-card:hover::before {
-    left: 150%;
-}
+        .giveaway-skeleton {
+            height: 400px;
+            border-radius: 1.5rem;
+            background: linear-gradient(90deg, rgba(30, 30, 30, 0.6) 0%, rgba(50, 50, 50, 0.6) 50%, rgba(30, 30, 30, 0.6) 100%);
+            background-size: 200% 100%;
+            animation: skeleton 1.5s ease-in-out infinite;
+        }
+        @keyframes skeleton {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
 
-.giveaway-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(83, 252, 24, 0.35);
-    box-shadow:
-        0 20px 40px -10px rgba(83, 252, 24, 0.2),
-        0 0 0 1px rgba(83, 252, 24, 0.1) inset;
-}
+        @keyframes toastIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to   { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes toastOut {
+            from { transform: translateX(0); opacity: 1; }
+            to   { transform: translateX(400px); opacity: 0; }
+        }
 
-/* Znaczek statusu w rogu */
-.giveaway-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.85rem;
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    border-radius: 999px;
-    background: rgba(83, 252, 24, 0.12);
-    color: #53fc18;
-    border: 1px solid rgba(83, 252, 24, 0.4);
-    backdrop-filter: blur(8px);
-}
+        #giveaways-count {
+            font-size: 0.75rem;
+            color: var(--kick-green);
+            background: rgba(83, 252, 24, 0.08);
+            border: 1px solid rgba(83, 252, 24, 0.3);
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
 
-.giveaway-badge::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #53fc18;
-    box-shadow: 0 0 10px #53fc18;
-    animation: badgePulse 1.6s ease-in-out infinite;
-}
+        @media (max-width: 1024px) {
+            .giveaways-grid { max-width: 800px; }
+        }
+        @media (max-width: 768px) {
+            .giveaways-title { font-size: 1.75rem; }
+            .giveaways-header { margin-bottom: 1.5rem; }
+            .giveaways-empty { padding: 3rem 1rem; }
+            .giveaways-grid { gap: 1.25rem; max-width: 100%; }
+            .giveaways-grid > .giveaway-card,
+            .giveaways-grid > .giveaway-skeleton {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            .giveaway-card { padding: 1.25rem; }
+        }
 
-@keyframes badgePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%      { opacity: 0.4; transform: scale(0.85); }
-}
+        /* ============ MKT CREDIT ============ */
+        .mkt-credit {
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 50%, #6dd5ed 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            position: relative;
+            transition: all 0.3s ease;
+            animation: mktGradient 3s ease infinite;
+        }
+        .mkt-credit::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: -2px;
+            height: 1px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff, #6dd5ed);
+            background-size: 200% 200%;
+            animation: mktGradient 3s ease infinite;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        .mkt-credit:hover { filter: drop-shadow(0 0 10px rgba(0, 198, 255, 0.6)); }
+        .mkt-credit:hover::after { opacity: 1; }
 
-/* Obrazek w karcie */
-.giveaway-image-wrap {
-    position: relative;
-    height: 180px;
-    border-radius: 1rem;
-    background: radial-gradient(circle at center, rgba(83, 252, 24, 0.05) 0%, transparent 70%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.25rem;
-    overflow: hidden;
-}
-
-.giveaway-image {
-    max-height: 160px;
-    max-width: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
-    transition: transform 0.5s ease;
-}
-
-.giveaway-card:hover .giveaway-image {
-    transform: scale(1.06) rotate(-2deg);
-}
-
-/* Tytuł i opis */
-.giveaway-title {
-    font-size: 1.15rem;
-    font-weight: 800;
-    line-height: 1.3;
-    margin-bottom: 0.5rem;
-    color: #ffffff;
-}
-
-.giveaway-description {
-    font-size: 0.85rem;
-    color: #9ca3af;
-    line-height: 1.55;
-    margin-bottom: 1.25rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Statystyki wewnątrz karty */
-.giveaway-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 0.85rem;
-    margin-bottom: 1rem;
-}
-
-.giveaway-stat {
-    text-align: center;
-}
-
-.giveaway-stat-label {
-    font-size: 0.62rem;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-weight: 700;
-    margin-bottom: 0.35rem;
-}
-
-.giveaway-stat-value {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: #ffffff;
-    font-family: 'Outfit', monospace;
-}
-
-.giveaway-stat-value.green {
-    color: #53fc18;
-    text-shadow: 0 0 12px rgba(83, 252, 24, 0.5);
-}
-
-/* Pasek postępu czasu */
-.giveaway-progress {
-    height: 6px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 1.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.giveaway-progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #3bc410, #53fc18);
-    border-radius: 999px;
-    box-shadow: 0 0 12px rgba(83, 252, 24, 0.6);
-    transition: width 0.6s ease;
-    position: relative;
-}
-
-.giveaway-progress-bar::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5));
-    animation: progressShine 2s ease-in-out infinite;
-}
-
-@keyframes progressShine {
-    0%, 100% { opacity: 0.3; }
-    50%      { opacity: 1; }
-}
-
-/* Przycisk dołączania */
-.giveaway-btn {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 1rem;
-    font-weight: 800;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    background: linear-gradient(135deg, #53fc18, #3bc410);
-    color: #000;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.giveaway-btn:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 25px rgba(83, 252, 24, 0.55);
-}
-
-.giveaway-btn:active {
-    transform: scale(0.98);
-}
-
-.giveaway-btn::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: rgba(255, 255, 255, 0.25);
-    transform: rotate(45deg) translate(-100%, -100%);
-    transition: transform 0.6s ease;
-}
-
-.giveaway-btn:hover::after {
-    transform: rotate(45deg) translate(50%, 50%);
-}
-
-/* Zwycięzca na karcie */
-.giveaway-winner {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.85rem 1rem;
-    border-radius: 0.85rem;
-    background: linear-gradient(135deg, rgba(255, 193, 7, 0.12), rgba(255, 152, 0, 0.08));
-    border: 1px solid rgba(255, 193, 7, 0.35);
-    color: #fbbf24;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    box-shadow: 0 0 20px rgba(255, 193, 7, 0.15) inset;
-}
-
-.giveaway-winner .trophy {
-    font-size: 1.25rem;
-    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.8));
-}
-
-/* Pusta sekcja */
-.giveaways-empty {
-    flex: 1 1 100%;
-    width: 100%;
-    max-width: 640px;
-    text-align: center;
-    padding: 4rem 1rem;
-    background: rgba(20, 20, 20, 0.5);
-    border: 1px dashed rgba(255, 255, 255, 0.08);
-    border-radius: 1.5rem;
-    color: #6b7280;
-}
-
-.giveaways-empty .empty-icon {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 1rem;
-    opacity: 0.4;
-}
-
-.giveaways-empty .empty-text {
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-/* Skeleton loading */
-.giveaway-skeleton {
-    height: 400px;
-    border-radius: 1.5rem;
-    background: linear-gradient(90deg, rgba(30, 30, 30, 0.6) 0%, rgba(50, 50, 50, 0.6) 50%, rgba(30, 30, 30, 0.6) 100%);
-    background-size: 200% 100%;
-    animation: skeleton 1.5s ease-in-out infinite;
-}
-
-@keyframes skeleton {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
-/* Responsywność */
-@media (max-width: 768px) {
-    .giveaways-title { font-size: 1.75rem; }
-    .giveaways-grid { grid-template-columns: 1fr; }
-    .giveaway-card { padding: 1.25rem; }
-}
-
-@keyframes toastIn {
-    from { transform: translateX(400px); opacity: 0; }
-    to   { transform: translateX(0); opacity: 1; }
-}
-@keyframes toastOut {
-    from { transform: translateX(0); opacity: 1; }
-    to   { transform: translateX(400px); opacity: 0; }
-}
-
-#giveaways-count {
-    font-size: 0.75rem;
-    color: var(--kick-green);
-    background: rgba(83, 252, 24, 0.08);
-    border: 1px solid rgba(83, 252, 24, 0.3);
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: inline-block;
-    margin-top: 0.25rem;
-}
-
-@media (max-width: 768px) {
-    .giveaways-title { font-size: 1.75rem; }
-    .giveaways-header { margin-bottom: 1.5rem; }
-    .giveaways-empty { padding: 3rem 1rem; }
-}
-
-/* Na tabletach i mobile – 1 lub 2 karty w rzędzie */
-@media (max-width: 1024px) {
-    .giveaways-grid {
-        max-width: 800px;    /* 2 × 380px + 28px = 788px */
-    }
-}
-
-@media (max-width: 768px) {
-    .giveaways-grid {
-        gap: 1.25rem;
-        max-width: 100%;
-    }
-    .giveaways-grid > .giveaway-card,
-    .giveaways-grid > .giveaway-skeleton {
-        flex: 1 1 100%;
-        max-width: 100%;
-    }
-}
-
-
-/* ============ MKT CREDIT ============ */
-.mkt-credit {
-    background: linear-gradient(135deg, #00c6ff 0%, #0072ff 50%, #6dd5ed 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    position: relative;
-    transition: all 0.3s ease;
-    animation: mktGradient 3s ease infinite;
-}
-
-.mkt-credit::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -2px;
-    height: 1px;
-    background: linear-gradient(90deg, #00c6ff, #0072ff, #6dd5ed);
-    background-size: 200% 200%;
-    animation: mktGradient 3s ease infinite;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-}
-
-.mkt-credit:hover {
-    filter: drop-shadow(0 0 10px rgba(0, 198, 255, 0.6));
-}
-
-.mkt-credit:hover::after {
-    opacity: 1;
-}
-
-@keyframes mktGradient {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
+        @keyframes mktGradient {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -866,119 +884,65 @@
             </div>
         </div>
 
-        <!-- PRODUCTS -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <!-- WIDE BANNER - ZOBACZ SKLEP ZA PUNKTY -->
+        <section class="mb-16 sm:mb-20">
+            <div class="shop-banner p-8 sm:p-10 md:p-14">
+                <div class="banner-content flex flex-col md:flex-row items-center gap-8 md:gap-12">
 
-            <!-- Product 1 -->
-            <div class="glass-panel product-card rounded-3xl p-1">
-                <div class="bg-black/40 rounded-[20px] p-5 sm:p-6 h-full flex flex-col">
-                    <div class="img-container relative h-72 rounded-2xl mb-6 flex items-center justify-center">
-                        <span class="absolute top-3 left-3 bg-[var(--kick-green)]/10 text-[var(--kick-green)] border border-[var(--kick-green)]/30 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider flex items-center backdrop-blur-md">
-                            <span class="w-2 h-2 bg-[var(--kick-green)] rounded-full mr-2 animate-pulse"></span> TRWA
-                        </span>
-                        <img src="https://via.placeholder.com/400x400/111/fff?text=Koszulka+Betclic" alt="Koszulka" class="h-48 sm:h-56 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
-                    </div>
-                    <div class="flex-grow">
-                        <h3 class="text-lg sm:text-xl font-bold mb-2 leading-tight">Koszulka Betclic Apogee <span class="text-gray-500 text-sm sm:text-base font-normal">[STAKE PULSE BEAT II]</span></h3>
-                        <p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-6 line-clamp-2">Ticket na losowanie koszulki drużyny Betclic Apogee. Wygrywa jedna osoba z każdego losowania. Losy są nieograniczone.</p>
-                    </div>
-                    <div class="timer-box rounded-xl p-3 sm:p-4 mb-4">
-                        <p class="text-[9px] sm:text-[10px] text-[var(--kick-green)] font-bold mb-2 sm:mb-3 tracking-widest">LOSOWANIE ZA</p>
-                        <div class="flex justify-between items-center text-center">
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">05</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Dni</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">01</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Godz</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">24</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Min</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">44</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Sek</div></div>
+                    <!-- Ikona -->
+                    <div class="flex-shrink-0">
+                        <div class="banner-icon">
+                            <svg class="w-10 h-10 text-[var(--kick-green)]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 5.7a1 1 0 0 0 .9 1.3h12M16 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM10 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+                            </svg>
                         </div>
                     </div>
-                    <button class="btn-premium w-full py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm">Kup za 500 PKT</button>
+
+                    <!-- Tekst -->
+                    <div class="flex-grow text-center md:text-left">
+                        <span class="banner-tag">Sklep za punkty</span>
+                        <h2 class="banner-title mb-4">
+                            WYMIEŃ PUNKTY<br class="hidden sm:block">
+                            NA <span class="accent">NAGRODY</span>
+                        </h2>
+                        <p class="text-gray-400 text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-2xl mb-6 md:mb-0">
+                            Zbieraj punkty za oglądanie streamów, aktywność na czacie i wsparcie kanału. Wymieniaj je na ekskluzywne nagrody: sprzęt gamingowy, koszulki, myszki, podkładki i wiele więcej.
+                        </p>
+                    </div>
+
+                    <!-- Przycisk -->
+                    <div class="flex-shrink-0 w-full md:w-auto">
+                        <a href="https://sklep.s1mek.pl" target="_blank" rel="noopener" class="btn-shop-big w-full md:w-auto justify-center">
+                            Zobacz sklep za punkty
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+
                 </div>
             </div>
+        </section>
 
-            <!-- Product 2 -->
-            <div class="glass-panel product-card rounded-3xl p-1">
-                <div class="bg-black/40 rounded-[20px] p-5 sm:p-6 h-full flex flex-col">
-                    <div class="img-container relative h-72 rounded-2xl mb-6 flex items-center justify-center">
-                        <span class="absolute top-3 left-3 bg-[var(--kick-green)]/10 text-[var(--kick-green)] border border-[var(--kick-green)]/30 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider flex items-center backdrop-blur-md">
-                            <span class="w-2 h-2 bg-[var(--kick-green)] rounded-full mr-2 animate-pulse"></span> TRWA
-                        </span>
-                        <img src="https://via.placeholder.com/400x400/111/fff?text=Myszka+Pulsar" alt="Myszka" class="h-48 sm:h-56 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
-                    </div>
-                    <div class="flex-grow">
-                        <h3 class="text-lg sm:text-xl font-bold mb-2 leading-tight">[Demon Slayer] PULSAR X2H Tenjen Gaming Mouse</h3>
-                        <p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-6 line-clamp-2">Ticket na losowanie limitowanej myszki firmy Pulsar - X2H Tenjen Gaming Mouse. Wygrywa jedna osoba z każdego losowania.</p>
-                    </div>
-                    <div class="timer-box rounded-xl p-3 sm:p-4 mb-4">
-                        <p class="text-[9px] sm:text-[10px] text-[var(--kick-green)] font-bold mb-2 sm:mb-3 tracking-widest">LOSOWANIE ZA</p>
-                        <div class="flex justify-between items-center text-center">
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">05</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Dni</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">01</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Godz</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">24</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Min</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">44</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Sek</div></div>
-                        </div>
-                    </div>
-                    <button class="btn-premium w-full py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm">Kup za 1000 PKT</button>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="glass-panel product-card rounded-3xl p-1">
-                <div class="bg-black/40 rounded-[20px] p-5 sm:p-6 h-full flex flex-col">
-                    <div class="img-container relative h-72 rounded-2xl mb-6 flex items-center justify-center">
-                        <span class="absolute top-3 left-3 bg-[var(--kick-green)]/10 text-[var(--kick-green)] border border-[var(--kick-green)]/30 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider flex items-center backdrop-blur-md">
-                            <span class="w-2 h-2 bg-[var(--kick-green)] rounded-full mr-2 animate-pulse"></span> TRWA
-                        </span>
-                        <img src="https://via.placeholder.com/400x400/111/fff?text=Mousepad" alt="Mousepad" class="h-48 sm:h-56 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
-                    </div>
-                    <div class="flex-grow">
-                        <h3 class="text-lg sm:text-xl font-bold mb-2 leading-tight">PULSAR eS Mercury Pro Gaming Mousepad</h3>
-                        <p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-6 line-clamp-2">Ticket na losowanie podkładki firmy Pulsar - eS Mercury Pro Gaming Mousepad. Wygrywa jedna osoba z każdego losowania.</p>
-                    </div>
-                    <div class="timer-box rounded-xl p-3 sm:p-4 mb-4">
-                        <p class="text-[9px] sm:text-[10px] text-[var(--kick-green)] font-bold mb-2 sm:mb-3 tracking-widest">LOSOWANIE ZA</p>
-                        <div class="flex justify-between items-center text-center">
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">05</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Dni</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">01</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Godz</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">24</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Min</div></div>
-                            <div class="w-px h-6 sm:h-8 bg-gray-800"></div>
-                            <div class="flex-1"><div class="text-xl sm:text-3xl font-mono font-bold text-white">44</div><div class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase mt-1">Sek</div></div>
-                        </div>
-                    </div>
-                    <button class="btn-premium w-full py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm">Kup za 300 PKT</button>
-                </div>
-            </div>
-
-        </div>
     </main>
 
     <!-- Losowania -->
-<!-- Losowania -->
-<section class="mb-16 sm:mb-20 mt-16 sm:mt-20">
-    <div class="giveaways-header">
-        <div>
-            <h2 class="giveaways-title">
-                <span class="icon">🎲</span>
-                Aktywne losowania
-            </h2>
-            <p class="giveaways-subtitle">Dołącz i wygraj ekskluzywne nagrody</p>
+    <section class="mb-16 sm:mb-20 mt-16 sm:mt-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
+        <div class="giveaways-header">
+            <div>
+                <h2 class="giveaways-title">
+                    <span class="icon">🎲</span>
+                    Aktywne losowania
+                </h2>
+                <p class="giveaways-subtitle">Dołącz i wygraj ekskluzywne nagrody</p>
+            </div>
+            <div id="giveaways-count" class="giveaways-subtitle"></div>
         </div>
-        <div id="giveaways-count" class="giveaways-subtitle"></div>
-    </div>
 
-    <div id="giveaways-container" class="giveaways-grid">
-        <div class="giveaway-skeleton"></div>
-        <div class="giveaway-skeleton"></div>
-        <div class="giveaway-skeleton"></div>
-    </div>
-</section>
+        <div id="giveaways-container" class="giveaways-grid">
+            <div class="giveaway-skeleton"></div>
+            <div class="giveaway-skeleton"></div>
+            <div class="giveaway-skeleton"></div>
+        </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="border-t border-white/5 py-10 md:py-12 mt-auto relative">
@@ -997,8 +961,8 @@
                     <h4 class="text-xs font-bold tracking-widest uppercase text-white mb-4">Nawigacja</h4>
                     <ul class="space-y-2 text-sm">
                         <li><a href="index.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Strona główna</a></li>
-                         <li><a href="socialmedia.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Social Media</a></li>
-                          <li><a href="wspolprace.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Współprace</a></li>
+                        <li><a href="socialmedia.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Social Media</a></li>
+                        <li><a href="wspolprace.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Współprace</a></li>
                         <li><a href="sklep.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Sklep</a></li>
                         <li><a href="ranking.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Ranking</a></li>
                         <li><a href="regulamin.html" class="text-gray-400 hover:text-[var(--kick-green)] transition-colors">Regulamin</a></li>
@@ -1080,42 +1044,42 @@
                 if (response.ok) {
                     const user = await response.json();
 
-if (authContainer) {
-    authContainer.innerHTML = `
-        <div class="flex items-center space-x-3">
-            <div class="text-right hidden lg:block">
-                <div class="text-sm font-bold text-white">${user.username}</div>
-                <div class="text-xs text-[var(--kick-green)] font-bold">${user.points.toLocaleString()} PKT</div>
-            </div>
-            <div class="relative">
-                <img src="${user.avatar}" alt="${user.username}"
-                    class="w-10 h-10 rounded-full border-2 border-[var(--kick-green)] object-cover"
-                    onerror="this.src='https://ui-avatars.com/api/?name=${user.username}&background=53fc18&color=000'">
-                <span class="absolute -bottom-1 -right-1 bg-[var(--kick-green)] text-black text-[9px] font-black px-1.5 py-0.5 rounded-full border-2 border-[#050505]">
-                    ${user.points}
-                </span>
-            </div>
-            <button onclick="logout()" class="text-xs text-gray-400 hover:text-red-500 transition">Wyloguj</button>
-        </div>
-    `;
-}
+                    if (authContainer) {
+                        authContainer.innerHTML = `
+                            <div class="flex items-center space-x-3">
+                                <div class="text-right hidden lg:block">
+                                    <div class="text-sm font-bold text-white">${user.username}</div>
+                                    <div class="text-xs text-[var(--kick-green)] font-bold">${user.points.toLocaleString()} PKT</div>
+                                </div>
+                                <div class="relative">
+                                    <img src="${user.avatar}" alt="${user.username}"
+                                        class="w-10 h-10 rounded-full border-2 border-[var(--kick-green)] object-cover"
+                                        onerror="this.src='https://ui-avatars.com/api/?name=${user.username}&background=53fc18&color=000'">
+                                    <span class="absolute -bottom-1 -right-1 bg-[var(--kick-green)] text-black text-[9px] font-black px-1.5 py-0.5 rounded-full border-2 border-[#050505]">
+                                        ${user.points}
+                                    </span>
+                                </div>
+                                <button onclick="logout()" class="text-xs text-gray-400 hover:text-red-500 transition">Wyloguj</button>
+                            </div>
+                        `;
+                    }
 
-if (drawerAuth) {
-    drawerAuth.innerHTML = `
-        <div class="user-info-mobile">
-            <img src="${user.avatar}" alt="${user.username}"
-                class="user-avatar-mobile"
-                onerror="this.src='https://ui-avatars.com/api/?name=${user.username}&background=53fc18&color=000'">
-            <div class="flex-grow min-w-0">
-                <div class="user-name-mobile">${user.username}</div>
-                <div class="text-xs text-[var(--kick-green)] font-bold mt-0.5">
-                    ${user.points.toLocaleString()} PKT
-                </div>
-            </div>
-        </div>
-        <button onclick="logout()" class="btn-logout-mobile">Wyloguj się</button>
-    `;
-}
+                    if (drawerAuth) {
+                        drawerAuth.innerHTML = `
+                            <div class="user-info-mobile">
+                                <img src="${user.avatar}" alt="${user.username}"
+                                    class="user-avatar-mobile"
+                                    onerror="this.src='https://ui-avatars.com/api/?name=${user.username}&background=53fc18&color=000'">
+                                <div class="flex-grow min-w-0">
+                                    <div class="user-name-mobile">${user.username}</div>
+                                    <div class="text-xs text-[var(--kick-green)] font-bold mt-0.5">
+                                        ${user.points.toLocaleString()} PKT
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="logout()" class="btn-logout-mobile">Wyloguj się</button>
+                        `;
+                    }
                 }
             } catch (error) { console.error('Błąd sprawdzania sesji:', error); }
         }
@@ -1124,177 +1088,172 @@ if (drawerAuth) {
             checkLoginStatus();
         });
     </script>
+
     <script>
-async function loadGiveaways() {
-    const container = document.getElementById('giveaways-container');
-    const countEl = document.getElementById('giveaways-count');
+        async function loadGiveaways() {
+            const container = document.getElementById('giveaways-container');
+            const countEl = document.getElementById('giveaways-count');
 
-    try {
-        const res = await fetch('/api/giveaways');
-        const giveaways = await res.json();
+            try {
+                const res = await fetch('/api/giveaways');
+                const giveaways = await res.json();
 
-        const activeCount = giveaways.filter(g => g.status === 'active').length;
-        if (countEl) {
-            countEl.textContent = activeCount > 0
-                ? `${activeCount} ${activeCount === 1 ? 'aktywne' : 'aktywnych'}`
-                : 'Brak aktywnych';
-        }
+                const activeCount = giveaways.filter(g => g.status === 'active').length;
+                if (countEl) {
+                    countEl.textContent = activeCount > 0
+                        ? `${activeCount} ${activeCount === 1 ? 'aktywne' : 'aktywnych'}`
+                        : 'Brak aktywnych';
+                }
 
-        if (!giveaways || giveaways.length === 0) {
-            container.innerHTML = `
-                <div class="giveaways-empty">
-                    <span class="empty-icon">🎯</span>
-                    <div class="empty-text">Brak losowań</div>
-                    <div class="giveaways-subtitle" style="margin-top: 0.5rem">Wróć później!</div>
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = giveaways.map(g => {
-            // === ZAKOŃCZONE LOSOWANIE ===
-            if (g.status === 'finished' && g.winnerUsername) {
-                return `
-                    <div class="giveaway-card finished">
-                        <span class="giveaway-badge finished">Zakończone</span>
-
-                        ${g.image ? `
-                            <div class="giveaway-image-wrap">
-                                <img src="${g.image}" alt="${g.title}" class="giveaway-image" style="filter: grayscale(0.3) drop-shadow(0 10px 20px rgba(0,0,0,0.8));">
-                            </div>
-                        ` : ''}
-
-                        <h3 class="giveaway-title">${g.title}</h3>
-                        <p class="giveaway-description">${g.description || ''}</p>
-
-                        <div class="giveaway-winner">
-                            <span class="trophy">🏆</span>
-                            <div>
-                                <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.15em;opacity:0.8;">Zwycięzca</div>
-                                <div style="font-size:1rem;font-weight:900;color:#fff;">${g.winnerUsername}</div>
-                            </div>
+                if (!giveaways || giveaways.length === 0) {
+                    container.innerHTML = `
+                        <div class="giveaways-empty">
+                            <span class="empty-icon">🎯</span>
+                            <div class="empty-text">Brak losowań</div>
+                            <div class="giveaways-subtitle" style="margin-top: 0.5rem">Wróć później!</div>
                         </div>
+                    `;
+                    return;
+                }
 
-                        <div class="giveaway-stats">
-                            <div class="giveaway-stat">
-                                <div class="giveaway-stat-label">Uczestnicy</div>
-                                <div class="giveaway-stat-value">${g.entryCount}</div>
+                container.innerHTML = giveaways.map(g => {
+                    if (g.status === 'finished' && g.winnerUsername) {
+                        return `
+                            <div class="giveaway-card finished">
+                                <span class="giveaway-badge finished">Zakończone</span>
+
+                                ${g.image ? `
+                                    <div class="giveaway-image-wrap">
+                                        <img src="${g.image}" alt="${g.title}" class="giveaway-image" style="filter: grayscale(0.3) drop-shadow(0 10px 20px rgba(0,0,0,0.8));">
+                                    </div>
+                                ` : ''}
+
+                                <h3 class="giveaway-title">${g.title}</h3>
+                                <p class="giveaway-description">${g.description || ''}</p>
+
+                                <div class="giveaway-winner">
+                                    <span class="trophy">🏆</span>
+                                    <div>
+                                        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.15em;opacity:0.8;">Zwycięzca</div>
+                                        <div style="font-size:1rem;font-weight:900;color:#fff;">${g.winnerUsername}</div>
+                                    </div>
+                                </div>
+
+                                <div class="giveaway-stats">
+                                    <div class="giveaway-stat">
+                                        <div class="giveaway-stat-label">Uczestnicy</div>
+                                        <div class="giveaway-stat-value">${g.entryCount}</div>
+                                    </div>
+                                    <div class="giveaway-stat">
+                                        <div class="giveaway-stat-label">Koszt</div>
+                                        <div class="giveaway-stat-value">${g.cost} PKT</div>
+                                    </div>
+                                </div>
+
+                                <button class="giveaway-btn disabled" style="background:rgba(50,50,50,0.8);color:#6b7280;cursor:not-allowed;pointer-events:none;">Zakończone</button>
                             </div>
-                            <div class="giveaway-stat">
-                                <div class="giveaway-stat-label">Koszt</div>
-                                <div class="giveaway-stat-value">${g.cost} PKT</div>
+                        `;
+                    }
+
+                    const endDate = new Date(g.endDate);
+                    const now = new Date();
+                    const created = new Date(g.createdAt || now);
+                    const totalTime = endDate - created;
+                    const elapsed = now - created;
+                    const progress = totalTime > 0 ? Math.min(100, Math.max(0, (elapsed / totalTime) * 100)) : 0;
+
+                    return `
+                        <div class="giveaway-card">
+                            <span class="giveaway-badge">Trwa</span>
+
+                            ${g.image ? `
+                                <div class="giveaway-image-wrap">
+                                    <img src="${g.image}" alt="${g.title}" class="giveaway-image">
+                                </div>
+                            ` : ''}
+
+                            <h3 class="giveaway-title">${g.title}</h3>
+                            <p class="giveaway-description">${g.description || 'Weź udział w losowaniu i zawalcz o nagrodę!'}</p>
+
+                            <div class="giveaway-stats">
+                                <div class="giveaway-stat">
+                                    <div class="giveaway-stat-label">Koszt</div>
+                                    <div class="giveaway-stat-value green">${g.cost} PKT</div>
+                                </div>
+                                <div class="giveaway-stat">
+                                    <div class="giveaway-stat-label">Uczestnicy</div>
+                                    <div class="giveaway-stat-value">${g.entryCount}</div>
+                                </div>
                             </div>
+
+                            <div class="giveaway-stat-label" style="text-align:left;margin-bottom:0.4rem;">
+                                Koniec: ${endDate.toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                            <div class="giveaway-progress">
+                                <div class="giveaway-progress-bar" style="width: ${progress}%"></div>
+                            </div>
+
+                            <button onclick="joinGiveaway('${g._id}')" class="giveaway-btn">
+                                Dołącz za ${g.cost} PKT
+                            </button>
                         </div>
+                    `;
+                }).join('');
 
-                        <button class="giveaway-btn disabled" style="background:rgba(50,50,50,0.8);color:#6b7280;cursor:not-allowed;pointer-events:none;">Zakończone</button>
+            } catch (e) {
+                console.error('Błąd ładowania losowań:', e);
+                container.innerHTML = `
+                    <div class="giveaways-empty">
+                        <span class="empty-icon">⚠️</span>
+                        <div class="empty-text" style="color:#ef4444;">Nie udało się załadować losowań</div>
                     </div>
                 `;
             }
+        }
 
-            // === AKTYWNE LOSOWANIE ===
-            const endDate = new Date(g.endDate);
-            const now = new Date();
-            const created = new Date(g.createdAt || now);
-            const totalTime = endDate - created;
-            const elapsed = now - created;
-            const progress = totalTime > 0 ? Math.min(100, Math.max(0, (elapsed / totalTime) * 100)) : 0;
+        async function joinGiveaway(id) {
+            const res = await fetch(`/api/giveaways/${id}/join`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            const data = await res.json();
 
-            return `
-                <div class="giveaway-card">
-                    <span class="giveaway-badge">Trwa</span>
+            if (res.ok) {
+                showToast('✅ Dołączono do losowania!', 'success');
+                loadGiveaways();
+                checkLoginStatus();
+            } else {
+                showToast('❌ ' + (data.error || 'Błąd'), 'error');
+            }
+        }
 
-                    ${g.image ? `
-                        <div class="giveaway-image-wrap">
-                            <img src="${g.image}" alt="${g.title}" class="giveaway-image">
-                        </div>
-                    ` : ''}
-
-                    <h3 class="giveaway-title">${g.title}</h3>
-                    <p class="giveaway-description">${g.description || 'Weź udział w losowaniu i zawalcz o nagrodę!'}</p>
-
-                    <div class="giveaway-stats">
-                        <div class="giveaway-stat">
-                            <div class="giveaway-stat-label">Koszt</div>
-                            <div class="giveaway-stat-value green">${g.cost} PKT</div>
-                        </div>
-                        <div class="giveaway-stat">
-                            <div class="giveaway-stat-label">Uczestnicy</div>
-                            <div class="giveaway-stat-value">${g.entryCount}</div>
-                        </div>
-                    </div>
-
-                    <div class="giveaway-stat-label" style="text-align:left;margin-bottom:0.4rem;">
-                        Koniec: ${endDate.toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                    <div class="giveaway-progress">
-                        <div class="giveaway-progress-bar" style="width: ${progress}%"></div>
-                    </div>
-
-                    <button onclick="joinGiveaway('${g._id}')" class="giveaway-btn">
-                        Dołącz za ${g.cost} PKT
-                    </button>
-                </div>
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                padding: 1rem 1.5rem;
+                border-radius: 0.85rem;
+                font-weight: 700;
+                font-size: 0.9rem;
+                z-index: 9999;
+                font-family: 'Outfit', sans-serif;
+                animation: toastIn 0.3s ease;
+                ${type === 'success'
+                    ? 'background: linear-gradient(135deg, #53fc18, #3bc410); color: #000; box-shadow: 0 0 25px rgba(83,252,24,0.5);'
+                    : 'background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; box-shadow: 0 0 25px rgba(239,68,68,0.5);'}
             `;
-        }).join('');
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'toastOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
-    } catch (e) {
-        console.error('Błąd ładowania losowań:', e);
-        container.innerHTML = `
-            <div class="giveaways-empty">
-                <span class="empty-icon">⚠️</span>
-                <div class="empty-text" style="color:#ef4444;">Nie udało się załadować losowań</div>
-            </div>
-        `;
-    }
-}
-
-async function joinGiveaway(id) {
-    const res = await fetch(`/api/giveaways/${id}/join`, {
-        method: 'POST',
-        credentials: 'include'
-    });
-    const data = await res.json();
-
-    if (res.ok) {
-        showToast('✅ Dołączono do losowania!', 'success');
-        loadGiveaways();
-        checkLoginStatus();
-    } else {
-        showToast('❌ ' + (data.error || 'Błąd'), 'error');
-    }
-}
-
-// Prosty toast
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        padding: 1rem 1.5rem;
-        border-radius: 0.85rem;
-        font-weight: 700;
-        font-size: 0.9rem;
-        z-index: 9999;
-        font-family: 'Outfit', sans-serif;
-        animation: toastIn 0.3s ease;
-        ${type === 'success'
-            ? 'background: linear-gradient(135deg, #53fc18, #3bc410); color: #000; box-shadow: 0 0 25px rgba(83,252,24,0.5);'
-            : 'background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; box-shadow: 0 0 25px rgba(239,68,68,0.5);'}
-    `;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.animation = 'toastOut 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-
-// Auto-odświeżanie co 30 s
-setInterval(loadGiveaways, 30000);
-
-// Wywołaj po załadowaniu strony
-document.addEventListener('DOMContentLoaded', loadGiveaways);
+        setInterval(loadGiveaways, 30000);
+        document.addEventListener('DOMContentLoaded', loadGiveaways);
     </script>
 </body>
 </html>
